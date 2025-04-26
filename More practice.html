@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> Car Prices </title>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <style>
+      text {
+          font-family: Arial;
+          font-size: 15px;
+          }
+      .axis path, .axis line{
+        fill:none;
+        stroke: black;
+        shape-rendering: crispEdges;
+      }
+      .tick text{
+        fill: black;
+        font-size: 11px
+      }
+
+      rect {
+        stroke: white;
+      }
+    </style>
+  </head>
+  <body>
+    <svg id="main" width="600" height="600">
+      <text id='label' x='20' y='20'> New Car prices in the US from 2019 to 2023</text>
+      <g transform="translate(20,40)"></g>
+    </svg>
+
+    <script>
+
+        var BAR_WIDTH = 10;
+        var MAX_BAR_HEIGHT = 200;
+
+        var carPrice = [];
+
+        function drawBarChart()
+        {
+          var maxValue = d3.max(carPrice);
+          console.log('max price:' + maxValue);
+
+          var selection = d3.select('svg')
+            .select('g')
+            .selectAll('rect')
+            .data(carPrice);
+
+          selection.enter()
+            .append('rect')
+            .append
+            .attr('height', function(d)
+
+            {
+              var barLength = (d / maxValue) * MAX_BAR_HEIGHT;
+              return barLength;
+            })
+            .attr('width', 10)
+            .attr('x', function(d, i){
+                return  i * 5;
+              })
+            .attr('y', function(d){
+               var n = 1 - (d/ maxValue);
+               return n * MAX_BAR_HEIGHT;
+           })
+        }
+
+        d3.csv('automobile_prices_economics_2019_2023.csv', function(data)
+          {
+          //  var record = data[0]['New Price ($)']
+            for(var i =0; i<data.length; i++)
+            {
+             var value = data[i]['New Price ($)'];
+             var num = parseInt(value);
+
+              if(value == undefined)
+              {
+                 continue;
+              }
+             else if (value = null)
+              {
+                  continue;
+              }
+
+                carPrice.push(+num);
+              }
+
+
+            console.log("");
+            drawBarChart();
+          })
+
+
+      </script>
